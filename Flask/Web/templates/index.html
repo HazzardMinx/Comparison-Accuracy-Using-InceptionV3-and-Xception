@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block head %} 
+<title>Klasifikasi Sepatu dengan Xception dan InceptionV3 - Home</title>
+
+{% endblock %}
+
+{% block body %} 
+<div class="wrapper">
+			<div class="inner">
+				<form action="/" method="POST" enctype="multipart/form-data">
+					<h3>Prediksi Gambar</h3>
+                    </br>
+                    </br>
+                    
+					<input type="file" class="form-control"  name="imagefile" required>
+					<span></span>
+					<span class="border"></span>
+					
+				
+					<button type="submit">Predict
+						<i class="zmdi zmdi-arrow-right"></i>
+					</button>
+				</form>
+
+                {% if prediction %}
+					</br>
+					</br>
+                    <p class="text-center">Gambar {{prediction}}</p>
+                {% endif %}
+			</div>
+		</div>
+{% endblock %}

@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hasil Klasifikasi Sepatu</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0f1117;
+      --surface:   #1a1d27;
+      --surface2:  #222638;
+      --border:    rgba(255,255,255,.08);
+      --xception:  #6c8fff;
+      --inception: #ff8c5a;
+      --win:       #4ade80;
+      --text:      #e8eaf0;
+      --muted:     #7b7f96;
+      --radius:    14px;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 40px 20px 60px;
+    }
+
+    /* ── Header ── */
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+      animation: fadeDown .5s ease both;
+    }
+    .header .eyebrow {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+    .header h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(22px, 4vw, 34px);
+      font-weight: 700;
+      letter-spacing: -.02em;
+    }
+
+    /* ── Layout ── */
+    .container { max-width: 860px; margin: 0 auto; }
+
+    .grid-top {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+    @media (max-width: 620px) {
+      .grid-top { grid-template-columns: 1fr; }
+    }
+
+    /* ── Cards ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      animation: fadeUp .5s ease both;
+    }
+    .card + .card { animation-delay: .08s; }
+
+    /* ── Gambar ── */
+    .shoe-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+    }
+    .shoe-wrap img {
+      width: 100%;
+      max-height: 220px;
+      object-fit: cover;
+      border-radius: 10px;
+      display: block;
+    }
+
+    /* ── Pemenang ── */
+    .winner-banner {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(74,222,128,.1);
+      border: 1px solid rgba(74,222,128,.25);
+      border-radius: 10px;
+      padding: 14px 18px;
+      margin-bottom: 20px;
+      font-weight: 600;
+      color: var(--win);
+      font-size: 15px;
+    }
+    .winner-banner .icon { font-size: 20px; flex-shrink: 0; }
+
+    /* ── Model cards ── */
+    .model-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    @media (max-width: 480px) { .model-row { grid-template-columns: 1fr; } }
+
+    .model-card {
+      background: var(--surface2);
+      border-radius: 10px;
+      padding: 16px 18px;
+      border: 1.5px solid transparent;
+      transition: border-color .2s;
+    }
+    .model-card.xception  { border-color: rgba(108,143,255,.3); }
+    .model-card.inception { border-color: rgba(255,140,90,.3); }
+
+    .model-tag {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .model-card.xception  .model-tag { color: var(--xception); }
+    .model-card.inception .model-tag { color: var(--inception); }
+
+    .model-result {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    /* ── Section title ── */
+    .section-title {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    /* ── Tabel ── */
+    table { width: 100%; border-collapse: collapse; }
+    thead th {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 0 12px 10px;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+    }
+    thead th:first-child { text-align: left; }
+    tbody tr { transition: background .15s; }
+    tbody tr:hover td { background: rgba(255,255,255,.03); }
+    tbody td {
+      padding: 11px 12px;
+      font-size: 14px;
+      border-bottom: 1px solid var(--border);
+      text-align: center;
+      color: var(--text);
+    }
+    tbody td:first-child { text-align: left; font-weight: 500; }
+    tbody tr:last-child td { border-bottom: none; }
+
+    .badge {
+      display: inline-block;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 2px 10px;
+      border-radius: 99px;
+    }
+    .badge-x  { background: rgba(108,143,255,.15); color: var(--xception); }
+    .badge-i  { background: rgba(255,140,90,.15);  color: var(--inception); }
+
+    /* ── Progress bars ── */
+    .bar-wrap { margin-bottom: 12px; }
+    .bar-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      margin-bottom: 5px;
+    }
+    .bar-label .kelas  { font-weight: 500; }
+    .bar-label .vals   { display: flex; gap: 14px; }
+    .bar-label .val-x  { color: var(--xception); font-weight: 600; }
+    .bar-label .val-i  { color: var(--inception); font-weight: 600; }
+    .bar-track {
+      height: 6px;
+      border-radius: 99px;
+      background: rgba(255,255,255,.07);
+      overflow: hidden;
+      position: relative;
+    }
+    /* two-layer bars: inception behind, xception on top */
+    .bar-fill-i {
+      position: absolute;
+      top: 0; left: 0;
+      height: 100%;
+      border-radius: 99px;
+      background: var(--inception);
+      opacity: .55;
+      transition: width 1s cubic-bezier(.4,0,.2,1);
+    }
+    .bar-fill-x {
+      position: absolute;
+      top: 0; left: 0;
+      height: 100%;
+      border-radius: 99px;
+      background: var(--xception);
+      opacity: .85;
+      transition: width 1s cubic-bezier(.4,0,.2,1);
+    }
+
+    /* ── Chart ── */
+    .chart-img {
+      width: 100%;
+      border-radius: 10px;
+      filter: brightness(.95);
+    }
+
+    /* ── Error ── */
+    .error-box {
+      background: rgba(248,113,113,.1);
+      border: 1px solid rgba(248,113,113,.25);
+      border-radius: 10px;
+      padding: 16px 20px;
+      color: #f87171;
+      font-weight: 500;
+    }
+
+    /* ── CTA ── */
+    .cta-wrap { text-align: center; margin-top: 32px; animation: fadeUp .5s .3s ease both; }
+    .btn-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      text-decoration: none;
+      padding: 12px 28px;
+      border-radius: 99px;
+      font-size: 14px;
+      font-weight: 600;
+      transition: background .2s, border-color .2s;
+    }
+    .btn-back:hover { background: var(--surface2); border-color: rgba(255,255,255,.18); }
+
+    /* ── Animations ── */
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <header class="header">
+      <p class="eyebrow">Klasifikasi Sepatu · Deep Learning</p>
+      <h1>Perbandingan Model</h1>
+    </header>
+
+    {% if error %}
+      <div class="card">
+        <div class="error-box">⚠️ {{ error }}</div>
+      </div>
+
+    {% else %}
+
+      <!-- Baris atas: foto + ringkasan -->
+      <div class="grid-top">
+        <div class="card" style="padding:16px;">
+          <div class="shoe-wrap">
+            <img src="/static/images/{{ filename }}" alt="Gambar Sepatu" />
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="winner-banner">
+            <span class="icon">🏆</span>
+            <span>{{ pemenang }}</span>
+          </div>
+
+          <p class="section-title">Prediksi per Model</p>
+          <div class="model-row">
+            <div class="model-card xception">
+              <div class="model-tag">Xception</div>
+              <div class="model-result">{{ hasil_xception }}</div>
+            </div>
+            <div class="model-card inception">
+              <div class="model-tag">InceptionV3</div>
+              <div class="model-result">{{ hasil_inception }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Progress bars -->
+      <div class="card" style="margin-bottom:20px; animation-delay:.12s;">
+        <p class="section-title">Confidence per Kelas</p>
+
+        {% for row in tabel %}
+        <div class="bar-wrap">
+          <div class="bar-label">
+            <span class="kelas">{{ row.kelas }}</span>
+            <span class="vals">
+              <span class="val-x">{{ row.xception }}</span>
+              <span class="val-i">{{ row.inception }}</span>
+            </span>
+          </div>
+          <div class="bar-track">
+            <div class="bar-fill-i"
+                 style="width:0"
+                 data-target="{{ row.inception_raw }}"></div>
+            <div class="bar-fill-x"
+                 style="width:0"
+                 data-target="{{ row.xception_raw }}"></div>
+          </div>
+        </div>
+        {% endfor %}
+
+        <div style="display:flex;gap:18px;margin-top:14px;font-size:12px;">
+          <span style="display:flex;align-items:center;gap:6px;">
+            <span style="width:12px;height:12px;border-radius:3px;background:var(--xception);display:inline-block;"></span>
+            Xception
+          </span>
+          <span style="display:flex;align-items:center;gap:6px;">
+            <span style="width:12px;height:12px;border-radius:3px;background:var(--inception);opacity:.7;display:inline-block;"></span>
+            InceptionV3
+          </span>
+        </div>
+      </div>
+
+      <!-- Tabel -->
+      <div class="card" style="margin-bottom:20px; animation-delay:.16s;">
+        <p class="section-title">Tabel Detail Confidence</p>
+        <table>
+          <thead>
+            <tr>
+              <th>Kelas</th>
+              <th>Xception</th>
+              <th>InceptionV3</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in tabel %}
+            <tr>
+              <td>{{ row.kelas }}</td>
+              <td><span class="badge badge-x">{{ row.xception }}</span></td>
+              <td><span class="badge badge-i">{{ row.inception }}</span></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Grafik -->
+      {% if chart_filename %}
+      <div class="card" style="animation-delay:.2s;">
+        <p class="section-title">Grafik Perbandingan</p>
+        <img class="chart-img"
+             src="/static/images/{{ chart_filename }}"
+             alt="Grafik Perbandingan Confidence" />
+      </div>
+      {% endif %}
+
+    {% endif %}
+
+    <div class="cta-wrap">
+      <a class="btn-back" href="/">← Coba Gambar Lain</a>
+    </div>
+  </div>
+
+  <script>
+    // Animasi progress bar setelah halaman load
+    window.addEventListener('load', () => {
+      const fills = document.querySelectorAll('[data-target]');
+      setTimeout(() => {
+        fills.forEach(el => {
+          const pct = parseFloat(el.dataset.target) * 100;
+          el.style.width = pct + '%';
+        });
+      }, 200);
+    });
+  </script>
+</body>
+</html>
