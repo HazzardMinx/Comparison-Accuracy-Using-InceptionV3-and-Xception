@@ -5,7 +5,7 @@ Image classification of shoe types is a challenging computer vision problem due 
 
 
 
-Tutorial on Running   Flaska
+Tutorial on Running   Flask
 1. Download Python 3.12.10 from https://www.python.org/downloads/release/python-31210/
 2. Install it and check "Add python.exe to PATH"
 3. Open cmd, then change the directory to the path where this file is saved
